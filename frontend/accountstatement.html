@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>Account Statement</title>
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js">
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <style>
+      body {
+	background-color: #777;
+	font-family: 'Poppins', sans-serif
+      }
+      #accno{
+         display: inline;
+      }
+  </style>
+</head>
+
+<body onload="fillstatement()">
+  
+
+<div class="wrapper rounded">
+   <nav class="navbar navbar-expand-lg navbar-dark dark d-lg-flex align-items-lg-start">
+      <a class="navbar-brand" href="#">
+         Transactions 
+
+      </a>
+         </nav>
+   
+   <div class="d-flex justify-content-between align-items-center mt-3">
+      <ul class="nav nav-tabs w-75">
+         <li class="nav-item"> <a class="nav-link active" href="#history">Statement</a> </li>
+      </ul>
+   </div>
+   <div class="table-responsive mt-3">
+      <table class="table table-dark table-borderless">
+         <thead>
+            <tr>
+               <th scope="col">Activity</th>
+               <th scope="col">Mode</th>
+               <th scope="col">Date</th>
+               <th scope="col" class="text-right">Amount</th>
+            </tr>
+         </thead>
+         <tbody>
+            <tr>
+               <td scope="row"> <span class="fa fa-briefcase mr-1"></span> Coorg Trip </td>
+               <td><span class="fa fa-cc-mastercard"></span></td>
+               <td class="text-muted">12 Jul 2020, 12:30 PM</td>
+               <td class="d-flex justify-content-end align-items-center"> <span></span> 52 </td>
+            </tr>
+            <tr>
+               <td scope="row"> <span class="fa fa-bed mr-1"></span> Hotel Leela Palace </td>
+               <td><span class="fa fa-cc-mastercard"></span></td>
+               <td class="text-muted">11 Jul 2020, 2:00 PM</td>
+               <td id = "f1"class="d-flex justify-content-end align-items-center"> <span></span> 18 </td>
+            </tr>
+            <tr>
+               <td scope="row"> <span class="fa fa-exchange mr-1"></span> Monthly Salary </td>
+               <td><span class="fa fa-cc-visa"></span></td>
+               <td class="text-muted">10 Jul 2020, 8:30 PM</td>
+               <td class="d-flex justify-content-end align-items-center"> <span></span> 9765 </td>
+            </tr>
+            <tr>
+               <td scope="row"> <span class="fa fa-exchange mr-1"></span> Xbox Purchase </td>
+               <td><span class="fa fa-cc-mastercard"></span></td>
+               <td class="text-muted">12 May 2020, 4:30 PM</td>
+               <td id="f2" class="d-flex justify-content-end align-items-center"> <span></span> 198 </td>
+            </tr>
+            <tr>
+               <td scope="row"> <span class="fa fa-cutlery mr-1"></span> Dinner Party </td>
+               <td><span class="fa fa-cc-visa"></span></td>
+               <td class="text-muted">11 May 2020, 5:30 PM</td>
+               <td id="f3" class="d-flex justify-content-end align-items-center"> <span></span> 12</td>
+            </tr>
+            <tr>
+               <td scope="row"> <span class="fa fa-briefcase mr-1"></span> Nandini Hills Ride </td>
+               <td><span class="fa fa-cc-mastercard"></span></td>
+               <td class="text-muted">10 May 2020, 01:30 PM</td>
+               <td id="f4"class="d-flex justify-content-end align-items-center"> <span></span> 97 </td>
+            </tr>
+            <tr>
+               <td scope="row"> <span class="fa fa-briefcase mr-1"></span> Goa Beach Party </td>
+               <td><span class="fa fa-cc-visa"></span></td>
+               <td class="text-muted">09 May 2020, 01:30 PM</td>
+               <td id="f5" class="d-flex justify-content-end align-items-center"> <span></span> 97 </td>
+            </tr>
+         </tbody>
+      </table>
+   </div>
+   <a class="navbar-brand" href="#">
+         Card Summary 
+         <p  class="text-muted pl-1">Account No: <span id="accno"></span></p><br>
+         <p class="text-muted pl-1">Card No: <span id="cardno"></span></p><br>
+         <p class="text-muted pl-1">Outstanding Amount:<p id="amount">474</p> </p><br>
+         <!-- <p class="text-muted pl-1">Unbilled Creds: </p><br> -->
+      </a><br>
+   <a class="navbar-brand" href="#">
+         Card Details 
+         <p class="text-muted pl-1">Name of Card Holder: <span id="nameofholder"></span></p><br>
+         <p class="text-muted pl-1">Card Status: <b id="changestatus" >Active</b></p><br>
+         <p class="text-muted pl-1">Card Type: <b>Credit</b></p><br>
+         <p class="text-muted pl-1"><u>Download E-Statement</u></p><br>
+      </a><br>
+   <a class="navbar-brand" href="#">
+         Card Limit 
+         <p class="text-muted pl-1">International Usage: <b>Enabled</b></p><br>
+         
+         <p id="toupdate" class="text-muted pl-1">Pay Limit: 75000</p><br>
+         <button id="btnlimit" type="button">Change Limit</button>
+         <!-- <label for="Amount">Amount:</label> -->
+         <input style="display:none;" type="text" id="valueinput" name="Amount"><br>
+      </a><br>
+</div>
+<script>
+   function randomIntFromInterval(min, max) { // min and max included 
+     return Math.floor(Math.random() * (max - min + 1) + min)
+   }
+
+   
+   async function fillstatement(){
+      let res = await axios.get('/getcurrentuser');
+     console.log(res.data.currentuser)
+      let mres = await axios.post('/fillstatementdetails',{username:res.data.currentuser});
+      
+      let getamount = await axios.post("/getamounttodisplay",{email:res.data.currentuser});
+      
+      // if( mres.data.cstatus == "Deactive")
+      //   document.getElementById("changestatus").innerHTML = "Active";
+      // else if(mres.data.cstatus == "Active")
+      document.getElementById("changestatus").innerHTML = mres.data.cstatus;
+      document.getElementById("accno").innerHTML = mres.data.account;
+      document.getElementById("cardno").innerHTML = mres.data.card;
+      document.getElementById("nameofholder").innerHTML = mres.data.name;
+      document.getElementById("amount").innerHTML = getamount.data.amount;
+   
+      // let sum = 0;
+      // for(let i=1;i<=5;i++){
+      //    const rndInt = randomIntFromInterval(100, 500);
+      //    sum  = sum+rndInt;
+      //    document.getElementById(`f${i}`).innerHTML = rndInt;
+      // }
+      // document.getElementById("amount").innerHTML = sum;
+      // flag = 1;
+   
+   }
+   
+    document.getElementById("btnlimit").addEventListener("click",function(e){
+       e.preventDefault();
+       document.getElementById("valueinput").style.display = "block";
+       document.getElementById("toupdate").innerHTML = "Pay Limit : " + document.getElementById("valueinput").value;
+    })
+
+</script>
+
+</body>
+
+</html>

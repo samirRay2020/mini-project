@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="x-ua-compatible" content="ie=edge">
+<title>Deregister Card</title>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<!-- CSS -->
+<style>
+.myForm {
+font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+font-size: 0.8em;
+width: 30em;
+padding: 1em;
+border: 1px solid #ccc;
+}
+
+.myForm * {
+box-sizing: border-box;
+}
+
+
+
+.myForm legend,
+.myForm label {
+padding: 0;
+font-weight: bold;
+}
+
+#title {
+font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+font-size: 0.8em;
+width: 30em;
+padding: 1em;
+border: 1px solid #ccc;
+font-weight: bold;
+}
+
+
+
+.myForm label {
+text-align: left;
+display: block;
+}
+
+.myForm input[type="text"],
+.myForm input[type="tel"],
+.myForm input[type="email"],
+.myForm input[type="number"],
+.myForm textarea {
+float: right;
+width: 60%;
+border: 1px solid #ccc;
+font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+font-size: 0.9em;
+padding: 0.3em;
+}
+
+.myForm textarea {
+height: 100px;
+}
+
+
+.myForm button {
+padding: 1em;
+border-radius: 0.5em;
+background: #eee;
+border: none;
+font-weight: bold;
+margin-left: 7%;
+margin-top: 2em;
+}
+
+.myForm button:hover {
+background: #ccc;
+cursor: pointer;
+}
+</style>
+
+</head>
+<body>
+    <button type="button" id="btnlog" onclick="logout()">Log Out</button>
+<center>
+
+<h3 id="title">Deregister Card</h3>
+
+<form class="myForm" method="get" >
+
+<p>
+<label>First Name*
+<input type="text" name="customer_fname" id="customer_fname" required>
+</label>
+</p>
+
+<p>
+<label>Middle Name
+<input type="text" name="customer_mname" id="customer_mname" >
+</label>
+</p>
+
+<p>
+<label>Last Name*
+<input type="text" name="customer_lname"  id="customer_lname" required>
+</label>
+</p>
+
+<p>
+<label>Expirey*
+<input type="text" name="exp_date" id="exp_date" placeholder="MM/DD" required>
+</label>
+</p>
+
+<p>
+<label>Card no.*
+<input type="number" name="card_no" id="card_no" required>
+</label>
+</p>
+<p>
+<label>CVV*
+<input type="number" name="cvv" id="cvv" required>
+</label>
+</p>
+
+<p>
+<label>Mobile*
+<input type="tel" name="phone_number" id="phone_number" required>
+</label>
+</p>
+
+<p>
+<label>Email
+<input type="email" name="email_address" id="email_address">
+</label>
+</p>
+
+
+
+<p><button id="btnregis">Submit Application</button></p>
+
+</form>
+</center>
+
+<script>
+function logout(){
+    window.location.href = "./login.html";
+}
+
+document.getElementById("btnregis").addEventListener("click",async function(){
+    console.log("rea");
+    let res = await axios.get('/getcurrentuser');
+    let card = document.getElementById("card_no").value;
+    console.log(card);
+    let mres = await axios.put('/deregister',{email:res.data.currentuser,cardno:card});
+    
+})
+
+
+</script>
+
+
+</body>
+</html>
